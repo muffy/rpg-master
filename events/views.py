@@ -15,7 +15,7 @@ class Events(APIView):
 
         slack_message = request.data
 
-        print slack_message
+        print(slack_message)
 
         if slack_message.get('token') != SLACK_VERIFICATION_TOKEN:
             return Response(data={'challenge': slack_message.get('challenge'),
