@@ -14,12 +14,6 @@ import os
 import django_heroku
 
 
-SLACK_CLIENT_ID='29086941717.358332990144'
-SLACK_CLIENT_SECRET='5a4f240f17975de4a362a8ce056b23c0'
-SLACK_VERIFICATION_TOKEN='32mh4pvZrLK61Gvi88ODQBWn'
-SLACK_OAUTH_ACCESS_TOKEN='xoxp-29086941717-29115712775-358515308657-d171443b073ab3db7bee3468482d9a5b'
-SLACK_BOT_USER_TOKEN='xoxb-358362864048-CG64cwEAXlLq9acB1ePNnq58'
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
