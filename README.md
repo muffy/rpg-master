@@ -1,20 +1,18 @@
-# Python: Getting Started
+# Pathfinder GM Bot
 
-A barebones Django app, which can easily be deployed to Heroku.
-
-This application supports the [Getting Started with Python on Heroku](https://devcenter.heroku.com/articles/getting-started-with-python) article - check it out.
+A Slack bot for assisting the GM when running adventures in Slack.
 
 ## Running Locally
 
 Make sure you have Python [installed properly](http://install.python-guide.org). Also, install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) and [Postgres](https://devcenter.heroku.com/articles/heroku-postgresql#local-setup).
 
 ```sh
-$ git clone git@github.com:heroku/python-getting-started.git
-$ cd python-getting-started
+$ git clone git@github.com:muffy/pathfinder-gm-bot.git
+$ cd pathfinder-gm-bot
 
 $ pipenv install
 
-$ createdb python_getting_started
+$ createdb pf_gm_bot
 
 $ python manage.py migrate
 $ python manage.py collectstatic
