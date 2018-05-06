@@ -14,11 +14,13 @@ class Events(APIView):
         slack_message = request.data
 
         if slack_message.get('token') != SLACK_VERIFICATION_TOKEN:
-            return Response(data=slack_message, status=status.HTTP_200_OK)
+            return Response(data={'challenge': slack_message.get('challenge'),
+                                  'type': 'bad_token'}, status=status.HTTP_200_OK)
 
         # verification challenge
         if slack_message.get('type') == 'url_verification':
-            return Response(data=slack_message,
+            return Response(data={'challenge': slack_message.get('challenge'),
+                                  'type': 'url_verification'},
                             status=status.HTTP_200_OK)
 
         # greet bot
