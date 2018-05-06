@@ -4,8 +4,10 @@ from rest_framework import status
 from django.conf import settings
 from slackclient import SlackClient
 
-SLACK_VERIFICATION_TOKEN = getattr(settings, 'SLACK_VERIFICATION_TOKEN', None)
-SLACK_BOT_USER_TOKEN = getattr(settings, 'SLACK_BOT_USER_TOKEN', None)
+from os import environ
+
+SLACK_VERIFICATION_TOKEN = environ.get('SLACK_VERIFICATION_TOKEN')
+SLACK_BOT_USER_TOKEN = environ.get('SLACK_BOT_USER_TOKEN')
 Client = SlackClient(SLACK_BOT_USER_TOKEN)
 
 class Events(APIView):
