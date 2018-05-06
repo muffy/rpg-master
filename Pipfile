@@ -9,6 +9,8 @@ django-heroku = "*"
 dice = "*"
 "psycopg2" = "*"
 slackclient = "*"
+djangorestframework = "*"
+slackeventsapi = "*"
 
 [requires]
 python_version = "3.6"
