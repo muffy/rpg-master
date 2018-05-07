@@ -72,5 +72,7 @@ class Events(APIView):
 
         Game.objects.create(name=name, gm=player, slack_channel=channel, current=True)
 
+        return f"Created a game named {name} in this channel, with <@{user}> as the GM"
+
 
 
