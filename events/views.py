@@ -8,7 +8,7 @@ from slackclient import SlackClient
 
 from os import environ
 
-from messageparser import parse_message
+from .messageparser import parse_message
 
 SLACK_VERIFICATION_TOKEN = environ.get('SLACK_VERIFICATION_TOKEN')
 SLACK_BOT_USER_TOKEN = environ.get('SLACK_BOT_USER_TOKEN')
@@ -46,11 +46,31 @@ class Events(APIView):
         text = event_message.get('text')
         channel = event_message.get('channel')
 
-        action, name = parse_message(text)
-
-        print(f"{action} game {name}")
-
-        response_text = ":robot: I'm afraid I can't do that, <@{}>".format(user)
+        try:
+            action, name = parse_message(text)
+            response_text = getattr(self, action)(user, channel, name)
+        except Exception as e:
+            print(e)
+            response_text = ":robot: I'm afraid I can't do that, <@{}>".format(user)
 
         Client.api_call(method='chat.postMessage', channel=channel, text=response_text)
+
+    # actions
+
+    def create_game(self, user, channel, name):
+        exists = Game.objects.filter(name=name, slack_channel=channel).count() > 0
+
+        if exists:
+            return f"Sorry, the game {name} already exists."
+
+        if Player.objects.filter(slack_id=user).count() > 0:
+            player = Player.objects.filter(slack_id=user)[0]
+        else:
+            player = Player.objects.create(slack_id=user)
+
+        Game.objects.filter(slack_channel=channel).update(current=False)
+
+        Game.objects.create(name=name, gm=player, slack_channel=channel, current=True)
+
+
 
