@@ -11,6 +11,7 @@ dice = "*"
 slackclient = "*"
 djangorestframework = "*"
 slackeventsapi = "*"
+pyparsing = "*"
 
 [requires]
 python_version = "3.6"
