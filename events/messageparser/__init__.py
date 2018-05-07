@@ -36,7 +36,7 @@ GAME_COMMAND = GAME_ACTION + Keyword('game') + NAME
 
 
 def parse_message(text):
-    return [(canonicalize_action(match[0].action), match[0].name) for match in GAME_COMMAND.scanString(text)][0]
+    return [(canonicalize_action(match[0].action, 'game'), match[0].name) for match in GAME_COMMAND.scanString(text)][0]
 
 
 def canonicalize_action(action, subject):

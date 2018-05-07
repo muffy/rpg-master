@@ -51,7 +51,7 @@ class Events(APIView):
             response_text = getattr(self, action)(user, channel, name)
         except Exception as e:
             print(e)
-            response_text = ":robot: I'm afraid I can't do that, <@{}>".format(user)
+            response_text = ":robot_face: I'm afraid I can't do that, <@{}>".format(user)
 
         Client.api_call(method='chat.postMessage', channel=channel, text=response_text)
 
