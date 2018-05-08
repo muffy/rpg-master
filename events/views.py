@@ -68,8 +68,6 @@ class Events(APIView):
         else:
             player = Player.objects.create(slack_id=user)
 
-        Game.objects.filter(slack_channel=channel).update(current=False)
-
         Game.objects.create(name=name, gm=player, slack_channel=channel, current=True)
 
         return f"Created a game named {name} in this channel, with <@{user}> as the GM"
