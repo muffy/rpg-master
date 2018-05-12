@@ -51,7 +51,7 @@ class Game(models.Model):
 
 
 # Characters always in the game - will be copied to each encounter in the game
-class GameCharacters(models.Model):
+class GameCharacter(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
 
@@ -59,7 +59,7 @@ class GameCharacters(models.Model):
         return f"{self.character.name}"
 
     class Meta:
-        db_table = 'game_characters'
+        db_table = 'game_character'
 
 
 # For one, one encounter should be running at a time.
@@ -77,7 +77,7 @@ class Encounter(models.Model):
 
 
 # Details of an encounter - which characters, initiative, delay status, readied status, conditions, etc.
-class EncounterCharacters(models.Model):
+class EncounterCharacter(models.Model):
     encounter = models.ForeignKey(Encounter, on_delete=models.CASCADE)
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
     initiative = models.IntegerField(default=0)
@@ -87,7 +87,7 @@ class EncounterCharacters(models.Model):
         return f"{self.character.name} ({self.initiative})"
 
     class Meta:
-        db_table = 'encounter_characters'
+        db_table = 'encounter_character'
 
 
 # Buffs, debuffs, spells, etc.
@@ -105,7 +105,7 @@ class Adjustment(models.Model):
 
 # Adjustments which are active in a game at the moment
 # These can be just to the game or they can be active during a particular encounter or on a character or characters
-class GameAdjustments(models.Model):
+class GameAdjustment(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     encounter = models.ForeignKey(Encounter, on_delete=models.CASCADE, null=True)
     character =  models.ForeignKey(Character, on_delete=models.CASCADE, null=True)
@@ -117,4 +117,4 @@ class GameAdjustments(models.Model):
         return f"{self.character.name}: {self.adjustment.name}"
 
     class Meta:
-        db_table = 'game_adjustments'
+        db_table = 'game_adjustment'
