@@ -50,6 +50,18 @@ class Game(models.Model):
         db_table = 'game'
 
 
+# Characters always in the game - will be copied to each encounter in the game
+class GameCharacters(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    character = models.ForeignKey(Character, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.character.name}"
+
+    class Meta:
+        db_table = 'game_characters'
+
+
 # For one, one encounter should be running at a time.
 class Encounter(models.Model):
     name = models.CharField(max_length=200)
