@@ -15,7 +15,7 @@ SLACK_BOT_USER_TOKEN = environ.get('SLACK_BOT_USER_TOKEN')
 Client = SlackClient(SLACK_BOT_USER_TOKEN)
 
 
-class Events(APIView):
+class Api(APIView):
     def post(self, request, *args, **kwargs):
 
         slack_message = request.data
@@ -68,7 +68,7 @@ class Events(APIView):
         else:
             player = Player.objects.create(slack_id=user)
 
-        Game.objects.create(name=name, gm=player, slack_channel=channel, current=True)
+        Game.objects.create(name=name, gm=player, slack_channel=channel)
 
         return f"Created a game named {name} in this channel, with <@{user}> as the GM"
 

@@ -1,0 +1,6 @@
+<h1>{{ game.name }}</h1>
+<ul>
+  {% for character in game.game_characters.all %}
+    <li>{{ character.name }}</li>
+  {% endfor %}
+</ul>
