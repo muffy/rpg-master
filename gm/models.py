@@ -51,7 +51,7 @@ class Game(models.Model):
 # For one, one encounter should be running at a time.
 class Encounter(models.Model):
     name = models.CharField(max_length=200)
-    ended = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     first_round = models.IntegerField(default=1)
     characters = models.ManyToManyField(Character, through='EncounterCharacter')
@@ -70,7 +70,7 @@ class Adjustment(models.Model):
     url = models.URLField()
 
     def __str__(self):
-        return f'<a href="{self.url}">{self.name}</a>'
+        return f'{self.name}: {self.url}'
 
     class Meta:
         db_table = 'adjustment'
@@ -86,6 +86,9 @@ class GameAdjustment(models.Model):
     start_round = models.IntegerField(default=0)
     duration = models.IntegerField(default=-1)
 
+    def __str__(self):
+        return f"{self.character.name} - {self.adjustment.name}"
+
     class Meta:
         db_table = 'game_adjustment'
         ordering = ['-start_round']
@@ -97,6 +100,7 @@ class EncounterCharacter(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
     initiative = models.IntegerField(default=0)
     delaying = models.BooleanField(default=False)
+    last_acted = models.IntegerField(default=-1)
 
     def __str__(self):
         return f"{self.character.name} ({self.initiative})"
