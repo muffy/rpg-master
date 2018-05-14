@@ -87,7 +87,7 @@ class GameAdjustment(models.Model):
     duration = models.IntegerField(default=-1)
 
     def __str__(self):
-        names = ','.join([character.name for character in self.characters])
+        names = ','.join([character.name for character in self.characters.all()])
         return f"{self.adjustment.name}: {names}"
 
     class Meta:
