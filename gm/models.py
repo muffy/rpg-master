@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.postgres import fields
 
+from datetime import datetime, timedelta
+
+DEFAULT_GAME_START = datetime.min + timedelta(hours=7)
+
 class Player(models.Model):
     slack_id = models.CharField(max_length=20,unique=True)
     name = models.CharField(max_length=200)
@@ -37,11 +41,17 @@ class Game(models.Model):
     active = models.BooleanField(default=True)
     gm = models.ForeignKey(Player, on_delete=models.CASCADE)
     slack_channel = models.CharField(max_length=20, null=False)
-    current_round = models.IntegerField(default=0)
     characters = models.ManyToManyField(Character)
+    game_time = models.DateTimeField(default=DEFAULT_GAME_START)
 
     def __str__(self):
         return self.name
+
+    def day(self):
+        return (self.game_time - datetime.min).days
+
+    def day_and_time(self):
+        return f"{self.game_time.hour:0>2}:{self.game_time.minute:0>2}:{self.game_time.second:0>2} on day {self.day()}"
 
     class Meta:
         db_table = 'game'
@@ -53,15 +63,16 @@ class Encounter(models.Model):
     name = models.CharField(max_length=200)
     active = models.BooleanField(default=True)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    first_round = models.IntegerField(default=1)
     characters = models.ManyToManyField(Character, through='EncounterCharacter')
+    encounter_time = models.DateTimeField(default=datetime.min)
+    round = models.IntegerField(default=1)
 
     def __str__(self):
         return self.name
 
     class Meta:
         db_table = 'encounter'
-        ordering = ['-first_round']
+        ordering = ['-encounter_time']
 
 
 # Buffs, debuffs, spells, etc.
@@ -87,7 +98,7 @@ class GameAdjustment(models.Model):
     duration = models.IntegerField(default=-1)
 
     def __str__(self):
-        names = ','.join([character.name for character in self.characters.all()])
+        names = ', '.join([character.name for character in self.characters.all()])
         return f"{self.adjustment.name}: {names}"
 
     class Meta:

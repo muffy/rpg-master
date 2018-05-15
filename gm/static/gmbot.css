@@ -116,3 +116,39 @@ footer.footer {
   padding-top: 4rem;
   padding-bottom: 4rem;
 }
+
+header.pagehead {
+  position: relative;
+  background-color: #343a40;
+  background: url("science.png") no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+header.pagehead .overlay {
+  position: absolute;
+  background-color: #000000;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+}
+
+header.pagehead h1 {
+  font-size: 2rem;
+}
+
+@media (min-width: 768px) {
+  header.pagehead {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  header.pagehead h1 {
+    font-size: 2.5rem;
+  }
+}
