@@ -10,10 +10,13 @@ def landing(request):
     return render(request, 'landing.html')
 
 
-class GameListView(ListView):
-    model = Game
-    paginate_by = 100
-
+def index(request):
+    games = Game.objects.all
+    return render(
+        request,
+        'game/index.html',
+        context={'games': games}
+    )
 
 class GameDetailView(DetailView):
     model = Game

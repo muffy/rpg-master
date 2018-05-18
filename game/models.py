@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres import fields
+from django.contrib.auth.admin import User
 
 from datetime import datetime, timedelta
 
@@ -7,20 +8,20 @@ DEFAULT_GAME_START = datetime.min + timedelta(hours=7)
 
 class Player(models.Model):
     slack_id = models.CharField(max_length=20,unique=True)
-    name = models.CharField(max_length=200)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.name} ({self.slack_id})"
+        return f"{self.user.name} ({self.slack_id})"
 
     class Meta:
         db_table = 'player'
-        ordering = ['name']
 
 # This can represent either a player character or an NPC
 #  - (enemy) NPCs belong to the Player who is also the GM
 class Character(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
+    nicknames = fields.ArrayField(models.CharField(max_length=20), default=list())
     stats = fields.JSONField(default=dict())
     statblock = models.TextField()
     emoji = models.CharField(max_length=200)
@@ -38,6 +39,7 @@ class Game(models.Model):
     name = models.CharField(max_length=200)
     active = models.BooleanField(default=True)
     gm = models.ForeignKey(Player, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     slack_channel = models.CharField(max_length=20, null=False)
     characters = models.ManyToManyField(Character)
     game_time = models.DateTimeField(default=DEFAULT_GAME_START)
