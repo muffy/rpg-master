@@ -1,4 +1,4 @@
-from gm.models import Game, Player
+from game.models import Game, Player
 
 from rest_framework.views import APIView
 from rest_framework.response import Response

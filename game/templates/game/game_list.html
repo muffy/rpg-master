@@ -1,5 +1,5 @@
 {% for game in page_obj %}
-  <li><a href="{% url 'gm:game-detail' game.id %}">{{ game.name }}</a></li>
+  <li><a href="{% url 'game:detail' game.id %}">{{ game.name }}</a></li>
   ...
 {% endfor %}
 

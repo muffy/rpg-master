@@ -7,11 +7,11 @@ from api.views import Api                                    #
 
 admin.autodiscover()
 
-import gm.views
+import game.views
 
 urlpatterns = [
-    url(r'^$', gm.views.landing, name='landing'),
+    url(r'^$', game.views.landing, name='landing'),
     path('admin/', admin.site.urls),
-    path('gm/', include('gm.urls')),
+    path('game/', include('game.urls')),
     url(r'^api/', Api.as_view())
 ]

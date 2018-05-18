@@ -54,8 +54,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('initiative', models.IntegerField(default=0)),
                 ('delaying', models.BooleanField(default=False)),
-                ('character', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gm.Character')),
-                ('encounter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gm.Encounter')),
+                ('character', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='game.Character')),
+                ('encounter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='game.Encounter')),
             ],
             options={
                 'db_table': 'encounter_character',
@@ -69,7 +69,7 @@ class Migration(migrations.Migration):
                 ('active', models.BooleanField(default=True)),
                 ('slack_channel', models.CharField(max_length=20)),
                 ('current_round', models.IntegerField(default=0)),
-                ('characters', models.ManyToManyField(to='gm.Character')),
+                ('characters', models.ManyToManyField(to='game.Character')),
             ],
             options={
                 'db_table': 'game',
@@ -81,10 +81,10 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('start_round', models.IntegerField(default=0)),
                 ('duration', models.IntegerField(default=1)),
-                ('adjustment', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gm.Adjustment')),
-                ('characters', models.ManyToManyField(to='gm.Character')),
-                ('game', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gm.Game')),
-                ('source', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='source', to='gm.Character')),
+                ('adjustment', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='game.Adjustment')),
+                ('characters', models.ManyToManyField(to='game.Character')),
+                ('game', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='game.Game')),
+                ('source', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='source', to='game.Character')),
             ],
             options={
                 'db_table': 'game_adjustment',
@@ -104,21 +104,21 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='game',
             name='gm',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gm.Player'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='game.Player'),
         ),
         migrations.AddField(
             model_name='encounter',
             name='characters',
-            field=models.ManyToManyField(through='gm.EncounterCharacter', to='gm.Character'),
+            field=models.ManyToManyField(through='game.EncounterCharacter', to='game.Character'),
         ),
         migrations.AddField(
             model_name='encounter',
             name='game',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gm.Game'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='game.Game'),
         ),
         migrations.AddField(
             model_name='character',
             name='player',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gm.Player'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='game.Player'),
         ),
     ]

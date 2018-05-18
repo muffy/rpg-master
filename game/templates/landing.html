@@ -10,7 +10,7 @@
       <div class="row">
         <div class="col-xl-9 mx-auto">
           <h1 class="mb-5">Running a game in Slack?</h1>
-          <h1 class="mb-5">Let the GM bot do the tedious work for you!</h1>
+          <h1 class="mb-5">Let the RPG Master do the tedious work for you!</h1>
         </div>
       </div>
     </div>
@@ -20,28 +20,36 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-6">
-          <a href="{% url 'gm:game-list' %}">
             <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-              <img src="{% static 'wisdom.png' %}"/>
+              <a href="{% url 'game:list' %}">
+              <img src="{% static 'gm.png' %}"/>
               <h3>GMs</h3>
               <p class="lead mb-0">
-                Create and manage your games. Track game time and encounters, monster stats,
-                and let the Slack bot automatically ping your players when it is their turn to go.
+                Create and manage your games
+              </a>
               </p>
+              <ul class="list-unstyled">
+                <li>Track current game time</li>
+                <li>Track encounter round</li>
+                <li>Let the bot ping your players</li>
+              </ul>
             </div>
-          </a>
         </div>
         <div class="col-lg-6">
-          <a href="{% url 'gm:game-list' %}">
             <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-              <img src="{% static 'dice-twenty-faces-twenty.png' %}"/>
-              <h3>Players</h3>
+              <a href="{% url 'game:list' %}">
+                <img src="{% static 'player.png' %}"/>
+          <h3>Players</h3>
               <p class="lead mb-0">
-                Add your characters, their statblocks, and their .por files. Configure timing and frequency
-                of Slack notifications.
+                Manage your characters
               </p>
+              </a>
+              <ul class="list-unstyled">
+                <li>Upload statblocks</li>
+                <li>Upload .por files</li>
+                <li>Configure notifications</li>
+              </ul>
             </div>
-          </a>
         </div>
       </div>
     </div>

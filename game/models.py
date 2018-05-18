@@ -18,8 +18,6 @@ class Player(models.Model):
 
 # This can represent either a player character or an NPC
 #  - (enemy) NPCs belong to the Player who is also the GM
-#  - Generally for PCs, hit points, CMD, and saves will not be relevant (for the bot)
-#    However, players who will not be around can ask the bot to roll saves for them.
 class Character(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
