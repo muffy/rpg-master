@@ -11,7 +11,7 @@ class Player(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.user.name} ({self.slack_id})"
+        return f"{self.user.username} ({self.slack_id})"
 
     class Meta:
         db_table = 'player'
