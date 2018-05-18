@@ -27,7 +27,7 @@ class Character(models.Model):
     emoji = models.CharField(max_length=200)
 
     def __str__(self):
-        return f"{self.name} ({self.player.user.name})"
+        return f"{self.name} ({self.player})"
 
     class Meta:
         db_table = 'character'
