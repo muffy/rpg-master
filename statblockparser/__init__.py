@@ -167,7 +167,7 @@ SQLine = Suppress(Literal("SQ")) + NamedList("sq") + NL
 Gear = (Literal("Combat Gear") | Literal("Other Gear"))
 GearLine = Suppress(Gear) + NamedList("gear") + NL
 
-Statistics = Suppress(StatisticsHeader) + AbilityLine + AttackLine + FeatsLine + TraitsLine + SkillsLine + Optional(LanguageLine) + SQLine + GearLine
+Statistics = Suppress(StatisticsHeader) + AbilityLine + AttackLine + FeatsLine + Optional(TraitsLine) + SkillsLine + Optional(LanguageLine) + SQLine + GearLine
 
 # Special Abilities
 """
