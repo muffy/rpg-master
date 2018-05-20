@@ -47,11 +47,11 @@ GRCLine.ignore(ParenRE)
 
 ASTLine = Alignment("alignment") + Size("size") + Suppress(restOfLine) + NL
 
-Initiative = Suppress(Literal("Init")) + SignedInteger("initiative")
-Perception = Suppress(Literal("Perception")) + SignedInteger("perception")
-InitLine = Initiative + SkipTo(Perception) + Perception + NL
+Initiative = Literal("Init") + SignedInteger("initiative")
+Perception = SkipTo(Literal("Perception"), include=True) + SignedInteger("perception")
+InitLine = Initiative + Perception + NL
 
-Basics = NameLine + GRCLine + ASTLine + InitLine
+Basics = NameLine + Optional(XPLine) + GRCLine + ASTLine + InitLine
 
 # NPC Basics
 
