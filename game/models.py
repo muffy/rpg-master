@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 
 import statblockparser
 
+DEFAULT_ENCOUNTER_START = datetime.min
 DEFAULT_GAME_START = datetime.min + timedelta(hours=7)
 
 class Player(models.Model):
@@ -19,6 +20,7 @@ class Player(models.Model):
 
     class Meta:
         db_table = 'player'
+
 
 # This can represent either a player character or an NPC
 #  - (enemy) NPCs belong to the Player who is also the GM
@@ -74,7 +76,7 @@ class Encounter(models.Model):
     active = models.BooleanField(default=True)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     characters = models.ManyToManyField(Character, through='EncounterCharacter')
-    encounter_time = models.DateTimeField(default=datetime.min)
+    encounter_time = models.DateTimeField(default=DEFAULT_ENCOUNTER_START)
     round = models.IntegerField(default=1)
 
     def __str__(self):
@@ -83,6 +85,14 @@ class Encounter(models.Model):
     class Meta:
         db_table = 'encounter'
         ordering = ['-encounter_time']
+
+
+@receiver(pre_save, sender=Encounter)
+def encounter_save_callback(instance, *args, **kwargs):
+    if instance.encounter_time == DEFAULT_ENCOUNTER_START:
+        instance.encounter_time = instance.game.game_time
+    if len(instance.characters) == 0:
+        instance.characters = instance.game.characters
 
 
 # Buffs, debuffs, spells, etc.

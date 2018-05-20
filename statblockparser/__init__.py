@@ -159,7 +159,17 @@ Organization solitary, gang (3-5), band (6-12 plus 35% noncombatants and 1 adept
 Treasure standard (chain shirt, greataxe, other treasure)
 """
 EcologyHeader = Divider + NL + Literal("Ecology") + NL + Divider + NL
-Ecology = Suppress(EcologyHeader)
+Ecology = SkipTo(EcologyHeader, include=True)
+
+# NPC Tactics
+"""
+--------------------
+Tactics
+--------------------
+During Combat The barbarian ogres rage on the first round of combat.
+"""
+TacticsHeader = Divider + NL + Literal("Tactics") + NL + Divider + NL
+Tactics = SkipTo(TacticsHeader, include=True)
 
 # Special Abilities
 """
@@ -180,14 +190,16 @@ Wild Empathy +7 (Ex) Improve the attitude of an animal, as if using Diplomacy.
 Wild Shape (9 hours, 3/day) (Su) Shapeshift into a different creature one or more times per day.
 Woodland Stride (Ex) Move through undergrowth at normal speed. 
 """
+SpecialHeader = Divider + NL + Literal("Special Abilities") + NL + Divider + NL
+
 SpecialAbilityRE = Regex("[^\n]+").setParseAction(lambda s, l, t: t[0].strip())
 SpecialAbilityLine = SpecialAbilityRE + NL
 SpecialAbilities = ZeroOrMore(SpecialAbilityLine)("special_abilities")
 
-Special = NextSection + SpecialAbilities
+Special = SkipTo(SpecialHeader, include=True) + SpecialAbilities
 
 PCStatBlock = Basics + Defense + Offense + Statistics + Special
-NPCStatBlock = NPCBasics + Defense + NPCOffense + Statistics + Optional(Ecology) + Special
+NPCStatBlock = NPCBasics + Defense + NPCOffense + Optional(Tactics) + Statistics + Optional(Ecology) + Special
 
 
 def parse_statblock(statblock, npc=False):
