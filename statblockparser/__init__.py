@@ -55,10 +55,10 @@ Basics = NameLine + GRCLine + ASTLine + InitLine
 
 # NPC Basics
 
-GRLine = Gender("gender") + Phrase("race") + NL
-GRLine.ignore(ParenRE)
+GCRLine = Gender("gender") + Phrase("race") + NL
+GCRLine.ignore(ParenRE)
 
-NPCBasics = Description + NameLine + XPLine + GRLine + ASTLine + InitLine
+NPCBasics = Optional(Description) + NameLine + Optional(XPLine) + GCRLine + ASTLine + InitLine
 
 # Defense
 """
