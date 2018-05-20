@@ -22,7 +22,7 @@ N Medium humanoid (human)
 Init +2; Senses Perception +12
 """
 # Line 1
-CharacterName = restOfLine
+CharacterName = restOfLine.setParseAction(lambda s, l, t: t.split("CR")[0].trim())
 NameLine = CharacterName("character_name") + NL
 
 # Line 2
