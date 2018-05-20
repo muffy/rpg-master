@@ -189,10 +189,10 @@ PCStatBlock = Basics + Defense + Offense + Statistics + Special
 NPCStatBlock = NPCBasics + Defense + NPCOffense + Statistics + Ecology + Special
 
 
-def parse_statblock(statblock):
+def parse_statblock(statblock, npc=False):
     lines = statblock.split("\n")
-    if lines[1] == DIVIDER:
-        # This is an NPC statblock
+    npc = npc or lines[1] == DIVIDER
+    if npc:
         return NPCStatBlock.parseString(statblock).asDict()
     else:
         return PCStatBlock.parseString(statblock).asDict()
