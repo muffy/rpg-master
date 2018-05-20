@@ -1,8 +1,12 @@
 from django.db import models
 from django.contrib.postgres import fields
 from django.contrib.auth.admin import User
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 from datetime import datetime, timedelta
+
+import statblockparser
 
 DEFAULT_GAME_START = datetime.min + timedelta(hours=7)
 
@@ -20,18 +24,24 @@ class Player(models.Model):
 #  - (enemy) NPCs belong to the Player who is also the GM
 class Character(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
     nicknames = fields.ArrayField(models.CharField(max_length=20), default=list())
-    stats = fields.JSONField(default=dict())
+    stats = fields.JSONField(default=dict(), editable=False)
     statblock = models.TextField()
     emoji = models.CharField(max_length=200)
+
+    def name(self):
+        self.stats["character_name"]
 
     def __str__(self):
         return f"{self.name} ({self.player})"
 
     class Meta:
         db_table = 'character'
-        ordering = ['name']
+
+
+@receiver(pre_save, sender=Character)
+def character_save_callback(instance, *args, **kwargs):
+    instance.stats = statblockparser.parse_statblock(instance.statblock)
 
 
 # For now, there should be one game per slack channel; we will make this more flexible later.
