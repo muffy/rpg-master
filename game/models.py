@@ -40,7 +40,7 @@ class Character(models.Model):
 
 @receiver(pre_save, sender=Character)
 def character_save_callback(instance, *args, **kwargs):
-    instance.stats = statblockparser.parse_statblock(instance.statblock.replace("\r", ""))
+    instance.stats = statblockparser.parse_statblock(instance.statblock.replace("\r", ""), npc=instance.npc)
     instance.name = instance.stats["character_name"] or instance.nicknames[0] or "UNKNOWN"
 
 

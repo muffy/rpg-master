@@ -102,7 +102,7 @@ SpaceFeet = SkipTo(Space) + Suppress(Space) + NumFeet("space")
 ReachFeet = SkipTo(Reach) + Suppress(Reach) + NumFeet("reach")
 
 Offense = NextSection + SpeedLine("speed")
-NPCOffense = NextSection + SpeedLine("speed") + SpaceFeet + ReachFeet
+NPCOffense = NextSection + SpeedLine("speed") + Optional(SpaceFeet) + Optional(ReachFeet)
 
 # Statistics
 """
@@ -158,7 +158,8 @@ Environment cold mountains
 Organization solitary, gang (3-5), band (6-12 plus 35% noncombatants and 1 adept or cleric of 1st-2nd level), raiding party (6-12 plus 35% noncombatants, 1 adept or sorcerer of 3rd-5th level, 1-4 winter wolves, and 2-3 ogres), or tribe (21-30 plus 1 adept, cleric, or sorcerer of 6th-7th level; 1 barbarian or ranger jarl of 7th-9th level; and 15-36 winter wolves, 13-22 ogres, and 1-2 young white dragons)
 Treasure standard (chain shirt, greataxe, other treasure)
 """
-Ecology = NextSection
+EcologyHeader = Divider + NL + Literal("Ecology") + NL + Divider + NL
+Ecology = Suppress(EcologyHeader)
 
 # Special Abilities
 """
@@ -186,7 +187,7 @@ SpecialAbilities = ZeroOrMore(SpecialAbilityLine)("special_abilities")
 Special = NextSection + SpecialAbilities
 
 PCStatBlock = Basics + Defense + Offense + Statistics + Special
-NPCStatBlock = NPCBasics + Defense + NPCOffense + Statistics + Ecology + Special
+NPCStatBlock = NPCBasics + Defense + NPCOffense + Statistics + Optional(Ecology) + Special
 
 
 def parse_statblock(statblock, npc=False):
