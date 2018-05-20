@@ -25,15 +25,17 @@ Init +2; Senses Perception +12
 CharacterName = restOfLine.setParseAction(lambda s, l, t: t[0].split("CR")[0].strip())
 NameLine = CharacterName("character_name") + NL
 
+XPLine = Literal("XP") + restOfLine + NL
+
 # Line 2
-Class = OneOrMore(Word(alphas)).setParseAction(lambda s, l, t: " ".join(t))
-Level = Word(nums)
-ClassLevel = Group(Class("class") + Level("level"))
-Classes = delimitedList(ClassLevel, delim="/")
 Genders = (Literal("Female") | Literal("Male"))
 Race = OneOrMore(Word(alphas)).setParseAction(lambda s, l, t: " ".join(t))
-NationalityRE = Regex("\(.*?\)")
-GRCLine = Genders("gender") + Race("race") + Optional(NationalityRE) + Optional(Classes("classes")) + NL
+RaceAndNationality = Race("race") + Suppress(Optional(ParentheticalRE))
+Class = OneOrMore(Word(alphas)).setParseAction(lambda s, l, t: " ".join(t))
+Level = Word(nums)
+ClassLevel = Group(Class("class") + Suppress(Optional(ParentheticalRE)) + Level("level"))
+Classes = delimitedList(ClassLevel, delim="/")
+GRCLine = Genders("gender") + RaceAndNationality + Classes("classes") + NL
 
 # Line 3
 # Alignment
@@ -53,7 +55,7 @@ Initiative = Suppress(Literal("Init")) + SignedInteger("initiative")
 Perception = Suppress(Literal("Perception")) + SignedInteger("perception")
 InitLine = Initiative + SkipTo(Perception, include=True) + NL
 
-Basics = NameLine + GRCLine + ASTLine + InitLine + NextSection
+Basics = NameLine + Optional(XPLine) + GRCLine + ASTLine + InitLine + NextSection
 
 # Defense
 """
