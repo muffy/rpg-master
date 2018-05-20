@@ -26,11 +26,9 @@ class Character(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     nicknames = fields.ArrayField(models.CharField(max_length=20), default=list())
     stats = fields.JSONField(default=dict(), editable=False)
+    name = models.CharField(max_length=200, editable=False)
     statblock = models.TextField()
     emoji = models.CharField(max_length=200)
-
-    def name(self):
-        self.stats["character_name"]
 
     def __str__(self):
         return f"{self.name} ({self.player})"
@@ -42,6 +40,7 @@ class Character(models.Model):
 @receiver(pre_save, sender=Character)
 def character_save_callback(instance, *args, **kwargs):
     instance.stats = statblockparser.parse_statblock(instance.statblock)
+    instance.name = instance.stats["character_name"] or instance.nicknames[0] or "UNKNOWN"
 
 
 # For now, there should be one game per slack channel; we will make this more flexible later.
