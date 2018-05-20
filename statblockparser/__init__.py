@@ -1,8 +1,8 @@
-from pprint import pprint
 from pyparsing import *
 
 ParserElement.setDefaultWhitespaceChars(" \t")
-NL = LineEnd().suppress()
+ParentheticalRE = Optional(Regex("\(.*?\)"))
+NL = ParentheticalRE + LineEnd().suppress()
 END = StringEnd()
 SignedInteger = pyparsing_common.signed_integer
 Integer = pyparsing_common.integer
@@ -26,10 +26,14 @@ CharacterName = restOfLine
 NameLine = CharacterName("character_name") + NL
 
 # Line 2
-Classes = (Literal("oracle") | Literal("druid"))
+Class = OneOrMore(Word(alphas)).setParseAction(lambda s, l, t: " ".join(t))
+Level = Word(nums)
+ClassLevel = Group(Class("class") + Level("level"))
+Classes = delimitedList(ClassLevel, delim="/")
 Genders = (Literal("Female") | Literal("Male"))
-Races = (Literal("human") | Literal("aasimar"))
-GRCLine = Genders("gender") + Races("race") + SkipTo(Classes("class"), include=True) + Word(nums)("level") + NL
+Race = OneOrMore(Word(alphas)).setParseAction(lambda s, l, t: " ".join(t))
+NationalityRE = Regex("\(.*?\)")
+GRCLine = Genders("gender") + Race("race") + Optional(NationalityRE) + Optional(Classes("classes")) + NL
 
 # Line 3
 # Alignment
@@ -103,7 +107,7 @@ OffenseHeader = Divider + NL + "Offense" + NL + Divider + NL
 # Line 1
 Speed = Suppress(Literal("Speed")) + SignedInteger("speed") + Suppress(Literal("ft."))
 ArmorSpeed = Suppress(Literal("(")) + SignedInteger("speed_in_armor") + Suppress(Literal("ft.") + Literal("in") + Literal ("armor") + Literal(")"))
-SpeedLine = Speed + ArmorSpeed + NL
+SpeedLine = Speed + Optional(ArmorSpeed) + NL
 
 Offense = Suppress(OffenseHeader) + SpeedLine + Suppress(NextSection)
 
@@ -133,22 +137,25 @@ Charisma = Suppress(Literal("Cha")) + SignedInteger("charisma")
 AbilityLine = Strength + Dexterity + Constitution + Intelligence + Wisdom + Charisma + NL
 
 # Line 2
-CMB = Suppress(SkipTo(Literal("CMB")) + Literal("CMB")) + SignedInteger("cmb") + SemiColon
-CMD = Suppress(Literal("CMD")) + Integer("cmd")
+CMB = Suppress(SkipTo(Literal("CMB")) + Literal("CMB")) + SignedInteger("cmb") + ParentheticalRE + SemiColon
+CMD = Suppress(Literal("CMD")) + Integer("cmd") + ParentheticalRE
 AttackLine = CMB + CMD + Suppress(restOfLine) + NL
 
 # Line 3
 FeatsLine = Suppress(Literal("Feats")) + NamedList("feats") + NL
 
 # Line 4
-TraitsLine = Suppress(Literal("Traits")) + restOfLine("traits") + NL
+TraitsOrTricks = (Literal("Traits") | Literal("Tricks"))
+TraitsLine = Suppress(TraitsOrTricks) + NamedList("traits_or_tricks") + NL
 
 # Line 5
 SkillName = Regex("[^+\-\d\n]+").setParseAction(lambda s, l, t: t[0].strip())
 SkillBonus = SignedInteger
 SkillExtra = Regex("\(.*?\)")
-Skill = Group(SkillName("skill") + SkillBonus("bonus") + Optional(SkillExtra)("extra")) + Optional(Comma)
-SkillsLine = Suppress(Literal("Skills")) + OneOrMore(Skill)("skills") + NL
+Skill = Group(SkillName("skill") + SkillBonus("bonus") + Optional(SkillExtra)("extra"))
+Skills = delimitedList(Skill, delim=",")("skills")
+ExtraModifiers = SemiColon + restOfLine.suppress()
+SkillsLine = Suppress(Literal("Skills")) + Skills + Optional(ExtraModifiers) + NL
 
 # Line 6
 LanguageLine = Suppress(Literal("Languages")) + NamedList("languages") + NL
@@ -157,9 +164,10 @@ LanguageLine = Suppress(Literal("Languages")) + NamedList("languages") + NL
 SQLine = Suppress(Literal("SQ")) + NamedList("sq") + NL
 
 # Line 8
-GearLine = Suppress(Literal("Combat Gear")) + NamedList("gear") + NL
+Gear = (Literal("Combat Gear") | Literal("Other Gear"))
+GearLine = Suppress(Gear) + NamedList("gear") + NL
 
-Statistics = Suppress(StatisticsHeader) + AbilityLine + AttackLine + FeatsLine + TraitsLine + SkillsLine + LanguageLine + SQLine + GearLine
+Statistics = Suppress(StatisticsHeader) + AbilityLine + AttackLine + FeatsLine + TraitsLine + SkillsLine + Optional(LanguageLine) + SQLine + GearLine
 
 # Special Abilities
 """
